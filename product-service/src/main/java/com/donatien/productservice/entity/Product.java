@@ -1,12 +1,12 @@
 package com.donatien.productservice.entity;
 
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 /**
  * Author: Eric Donatien
@@ -22,11 +22,11 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long productId;
+    private Long productId;
     @Column(name = "PRODUCT_NAME")
     private String productName;
     @Column(name = "PRICE")
-    private long price;
+    private Long price;
     @Column(name = "QUANTITY")
-    private long quantity;
+    private Long quantity;
 }
