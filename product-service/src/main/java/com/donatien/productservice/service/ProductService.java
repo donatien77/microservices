@@ -1,6 +1,7 @@
 package com.donatien.productservice.service;
 
 import com.donatien.productservice.model.ProductRequest;
+import com.donatien.productservice.model.ProductResponse;
 
 /**
  * Author: Eric Donatien
@@ -9,4 +10,6 @@ import com.donatien.productservice.model.ProductRequest;
  */
 public interface ProductService {
     Long addProduct(ProductRequest productRequest);
+
+    ProductResponse findProductById(Long productId);
 }
