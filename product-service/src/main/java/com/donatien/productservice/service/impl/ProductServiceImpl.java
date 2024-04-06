@@ -1,6 +1,7 @@
 package com.donatien.productservice.service.impl;
 
 import com.donatien.productservice.entity.Product;
+import com.donatien.productservice.exception.ProductServiceCustomException;
 import com.donatien.productservice.model.ProductRequest;
 import com.donatien.productservice.model.ProductResponse;
 import com.donatien.productservice.repository.ProductRepository;
@@ -47,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
         Product product
                 = productRepository.findById(productId)
                 .orElseThrow(
-                        () -> new RuntimeException("Product with given id not found"));
+                        () -> new ProductServiceCustomException("Product with given id not found",  "PRODUCT_NOT_FOUND"));
         ProductResponse productResponse
                 = new ProductResponse();
         copyProperties(product, productResponse);
