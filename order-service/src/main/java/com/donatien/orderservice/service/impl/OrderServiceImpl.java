@@ -1,8 +1,14 @@
 package com.donatien.orderservice.service.impl;
 
+import com.donatien.orderservice.entity.Order;
+import com.donatien.orderservice.model.OrderRequest;
+import com.donatien.orderservice.repository.OrderRepository;
 import com.donatien.orderservice.service.OrderService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 /**
  * Author: Eric Donatien
@@ -12,4 +18,24 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderRepository orderRepository;
+    @Override
+    public Long placeOrder(OrderRequest orderRequest) {
+        log.info("Placing Order Request: {}", orderRequest);
+
+        Order order = Order.builder()
+                .amount(orderRequest.getTotalAmount())
+                .orderStatus("CREATED")
+                .productId(orderRequest.getProductId())
+                .orderDate(Instant.now())
+                .quantity(orderRequest.getQuantity())
+                .build();
+
+        order = orderRepository.save(order);
+
+        log.info("Order Places successfully with Order Id: {}", order.getOrderId());
+        return order.getOrderId();
+    }
 }

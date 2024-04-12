@@ -14,7 +14,7 @@ import java.time.Instant;
  * Date 09 Apr, 2024
  */
 @Entity
-@Table(name = "ORDER")
+@Table(name = "ORDERS")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
