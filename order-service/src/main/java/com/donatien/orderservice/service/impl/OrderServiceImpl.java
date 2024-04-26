@@ -1,6 +1,7 @@
 package com.donatien.orderservice.service.impl;
 
 import com.donatien.orderservice.entity.Order;
+import com.donatien.orderservice.external.client.ProductService;
 import com.donatien.orderservice.model.OrderRequest;
 import com.donatien.orderservice.repository.OrderRepository;
 import com.donatien.orderservice.service.OrderService;
@@ -21,10 +22,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ProductService productService;
     @Override
     public Long placeOrder(OrderRequest orderRequest) {
         log.info("Placing Order Request: {}", orderRequest);
+        productService.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());
 
+        log.info("Creating Order With Status CREATED");
         Order order = Order.builder()
                 .amount(orderRequest.getTotalAmount())
                 .orderStatus("CREATED")
