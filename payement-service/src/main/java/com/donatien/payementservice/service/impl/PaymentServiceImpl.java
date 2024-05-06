@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.Instant;
 
 /**
@@ -18,6 +19,9 @@ import java.time.Instant;
 @Service
 @Log4j2
 public class PaymentServiceImpl implements PaymentService {
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static SecureRandom random = new SecureRandom();
 
     @Autowired
     private TransactionDetailsRepository transactionDetailsRepository;
@@ -32,7 +36,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentMode(paymentRequest.getPaymentMode().name())
                 .paymentStatus("SUCCESS")
                 .orderId(paymentRequest.getOrderId())
-                .referenceNumber(paymentRequest.getReferenceNumber())
+                //.referenceNumber(paymentRequest.getReferenceNumber())
+                .referenceNumber(generateReferenceNumber())
                 .amount(paymentRequest.getAmount())
                 .build();
 
@@ -42,4 +47,17 @@ public class PaymentServiceImpl implements PaymentService {
 
         return transactionDetails.getId();
     }
+
+
+    public static String generateReferenceNumber() {
+        StringBuilder sb = new StringBuilder(6);
+        for (int i = 0; i < 6; i++) {
+            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return sb.toString();
+    }
 }
+
+
+
+
