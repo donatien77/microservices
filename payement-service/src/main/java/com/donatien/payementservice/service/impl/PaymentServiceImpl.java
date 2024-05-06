@@ -36,7 +36,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentMode(paymentRequest.getPaymentMode().name())
                 .paymentStatus("SUCCESS")
                 .orderId(paymentRequest.getOrderId())
-                //.referenceNumber(paymentRequest.getReferenceNumber())
                 .referenceNumber(generateReferenceNumber())
                 .amount(paymentRequest.getAmount())
                 .build();
@@ -48,7 +47,6 @@ public class PaymentServiceImpl implements PaymentService {
         return transactionDetails.getId();
     }
 
-
     public static String generateReferenceNumber() {
         StringBuilder sb = new StringBuilder(6);
         for (int i = 0; i < 6; i++) {
@@ -57,7 +55,3 @@ public class PaymentServiceImpl implements PaymentService {
         return sb.toString();
     }
 }
-
-
-
-

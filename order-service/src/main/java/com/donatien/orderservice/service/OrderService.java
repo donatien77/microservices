@@ -1,6 +1,7 @@
 package com.donatien.orderservice.service;
 
 import com.donatien.orderservice.model.OrderRequest;
+import com.donatien.orderservice.model.OrderResponse;
 
 /**
  * Author: Eric Donatien
@@ -9,4 +10,6 @@ import com.donatien.orderservice.model.OrderRequest;
  */
 public interface OrderService {
     Long placeOrder(OrderRequest orderRequest);
+
+    OrderResponse getOrderDetails(Long orderId);
 }

@@ -1,10 +1,12 @@
 package com.donatien.orderservice.service.impl;
 
 import com.donatien.orderservice.entity.Order;
+import com.donatien.orderservice.exception.CustomException;
 import com.donatien.orderservice.external.client.PaymentService;
 import com.donatien.orderservice.external.client.ProductService;
 import com.donatien.orderservice.external.request.PaymentRequest;
 import com.donatien.orderservice.model.OrderRequest;
+import com.donatien.orderservice.model.OrderResponse;
 import com.donatien.orderservice.repository.OrderRepository;
 import com.donatien.orderservice.service.OrderService;
 import lombok.extern.log4j.Log4j2;
@@ -70,5 +72,24 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Order Places successfully with Order Id: {}", order.getOrderId());
         return order.getOrderId();
+    }
+
+    @Override
+    public OrderResponse getOrderDetails(Long orderId) {
+        log.info("Get order details for Order ID: {}", orderId);
+
+        Order order
+                = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException("Order not found for the Order ID:" + orderId, "NOT_FOUND", 404));
+
+        OrderResponse orderResponse
+                = OrderResponse.builder()
+                .orderId(order.getOrderId())
+                .orderStatus(order.getOrderStatus())
+                .amount(order.getAmount())
+                .orderDate(order.getOrderDate())
+                .build();
+
+        return orderResponse;
     }
 }
