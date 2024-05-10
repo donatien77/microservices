@@ -9,9 +9,11 @@ import com.donatien.orderservice.model.OrderRequest;
 import com.donatien.orderservice.model.OrderResponse;
 import com.donatien.orderservice.repository.OrderRepository;
 import com.donatien.orderservice.service.OrderService;
+import com.donatien.productservice.model.ProductResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 
@@ -29,6 +31,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     private PaymentService paymentService;
@@ -82,12 +87,27 @@ public class OrderServiceImpl implements OrderService {
                 = orderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomException("Order not found for the Order ID:" + orderId, "NOT_FOUND", 404));
 
+        log.info("Invoking Product Service to fetch the product for ID: {}", order.getProductId());
+        ProductResponse productResponse
+                = restTemplate.getForObject(
+                        "http://PRODUCT-SERVICE/product/" + order.getProductId(),
+                ProductResponse.class
+        );
+
+        OrderResponse.ProductDetails productDetails
+                = OrderResponse.ProductDetails
+                .builder()
+                .productName(productResponse.getProductName())
+                .productId(productResponse.getProductId())
+                .build();
+
         OrderResponse orderResponse
                 = OrderResponse.builder()
                 .orderId(order.getOrderId())
                 .orderStatus(order.getOrderStatus())
                 .amount(order.getAmount())
                 .orderDate(order.getOrderDate())
+                .productDetails(productDetails)
                 .build();
 
         return orderResponse;
