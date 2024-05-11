@@ -1,6 +1,7 @@
 package com.donatien.payementservice.service;
 
 import com.donatien.payementservice.model.PaymentRequest;
+import com.donatien.payementservice.model.PaymentResponse;
 
 /**
  * Author: Eric Donatien
@@ -9,4 +10,6 @@ import com.donatien.payementservice.model.PaymentRequest;
  */
 public interface PaymentService {
     Long doPayment(PaymentRequest paymentRequest);
+
+    PaymentResponse getPaymentDetailsByOrderId(String orderId);
 }

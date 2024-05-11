@@ -5,6 +5,7 @@ import com.donatien.orderservice.exception.CustomException;
 import com.donatien.orderservice.external.client.PaymentService;
 import com.donatien.orderservice.external.client.ProductService;
 import com.donatien.orderservice.external.request.PaymentRequest;
+import com.donatien.orderservice.external.response.PaymentResponse;
 import com.donatien.orderservice.model.OrderRequest;
 import com.donatien.orderservice.model.OrderResponse;
 import com.donatien.orderservice.repository.OrderRepository;
@@ -94,11 +95,24 @@ public class OrderServiceImpl implements OrderService {
                 ProductResponse.class
         );
 
+        log.info("Getting payment information from the payment Service");
+        PaymentResponse paymentResponse
+                = restTemplate.getForObject("http://PAYMENT-SERVICE/payment/order/" + order.getOrderId(), PaymentResponse.class);
+
         OrderResponse.ProductDetails productDetails
                 = OrderResponse.ProductDetails
                 .builder()
                 .productName(productResponse.getProductName())
                 .productId(productResponse.getProductId())
+                .build();
+
+        OrderResponse.PaymentDetails paymentDetails
+                = OrderResponse.PaymentDetails
+                .builder()
+                .paymentId(paymentResponse.getPaymentId())
+                .paymentStatus(paymentResponse.getStatus())
+                .paymentDate(paymentResponse.getPaymentDate())
+                .paymentMode(paymentResponse.getPaymentMode())
                 .build();
 
         OrderResponse orderResponse
@@ -108,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
                 .amount(order.getAmount())
                 .orderDate(order.getOrderDate())
                 .productDetails(productDetails)
+                .paymentDetails(paymentDetails)
                 .build();
 
         return orderResponse;

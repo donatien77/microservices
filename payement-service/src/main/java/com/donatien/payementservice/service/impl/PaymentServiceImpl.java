@@ -1,7 +1,9 @@
 package com.donatien.payementservice.service.impl;
 
 import com.donatien.payementservice.entity.TransactionDetails;
+import com.donatien.payementservice.model.PaymentMode;
 import com.donatien.payementservice.model.PaymentRequest;
+import com.donatien.payementservice.model.PaymentResponse;
 import com.donatien.payementservice.repository.TransactionDetailsRepository;
 import com.donatien.payementservice.service.PaymentService;
 import lombok.extern.log4j.Log4j2;
@@ -45,6 +47,26 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("Transaction Completed with ID: {}", transactionDetails.getId());
 
         return transactionDetails.getId();
+    }
+
+    @Override
+    public PaymentResponse getPaymentDetailsByOrderId(String orderId) {
+        log.info("Getting payment details for the Order Id: {}", orderId);
+
+        TransactionDetails transactionDetails
+                = transactionDetailsRepository.findByOrderId(Long.valueOf(orderId));
+
+        PaymentResponse paymentResponse
+                = PaymentResponse.builder()
+                .paymentId(transactionDetails.getId())
+                .paymentMode(PaymentMode.valueOf(transactionDetails.getPaymentMode()))
+                .paymentDate(transactionDetails.getPaymentDate())
+                .orderId(transactionDetails.getOrderId())
+                .status(transactionDetails.getPaymentStatus())
+                .amount(transactionDetails.getAmount())
+                .build();
+
+        return paymentResponse;
     }
 
     public static String generateReferenceNumber() {
