@@ -7,12 +7,19 @@ import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuit
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.keyvalue.core.mapping.KeySpaceResolver;
+import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 public class CloudGatewayApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CloudGatewayApplication.class, args);
+	}
+
+	@Bean
+	KeySpaceResolver userKeySolver(){
+		return exchange -> String.valueOf(Mono.just("userKey"));
 	}
 
 	@Bean
